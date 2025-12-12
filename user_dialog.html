@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create User Dialog Assignment</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .user-list {
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      padding: 6px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    /* Modal styling */
+    .modal {
+      display: none; 
+      position: fixed;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      width: 300px;
+      border-radius: 8px;
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Create User Dialog Assignment</h1>
+
+  <!-- User List -->
+  <div class="user-list">
+    <h3>Existing Users</h3>
+    <ul id="userList">
+      <li><strong>admin</strong> — Admin User — admin@example.com</li>
+    </ul>
+  </div>
+
+  <button id="openModalBtn">Add New User</button>
+
+  <!-- Modal -->
+  <div id="userModal" class="modal">
+    <div class="modal-content">
+      <h3>New User</h3>
+
+      <input type="text" id="username" placeholder="Username" />
+      <input type="text" id="fullname" placeholder="Full name" />
+      <input type="email" id="email" placeholder="Email" />
+
+      <button id="submitUserBtn">Submit</button>
+      <button id="closeModalBtn" style="background:#888; margin-top:8px;">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById("userModal");
+    const openModalBtn = document.getElementById("openModalBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const submitUserBtn = document.getElementById("submitUserBtn");
+    const userList = document.getElementById("userList");
+
+    // OPEN MODAL
+    openModalBtn.addEventListener("click", () => {
+      modal.style.display = "flex";
+    });
+
+    // CLOSE MODAL
+    closeModalBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+    // SUBMIT NEW USER
+    submitUserBtn.addEventListener("click", () => {
+      const username = document.getElementById("username");
+      const fullname = document.getElementById("fullname");
+      const email = document.getElementById("email");
+
+      if (!username.value || !fullname.value || !email.value) {
+        alert("Please fill out all fields!");
+        return;
+      }
+
+      // Add new user to list
+      const newUser = document.createElement("li");
+      newUser.innerHTML = `<strong>${username.value}</strong> — ${fullname.value} — ${email.value}`;
+      userList.appendChild(newUser);
+
+      // Clear form
+      username.value = "";
+      fullname.value = "";
+      email.value = "";
+
+      // Close modal
+      modal.style.display = "none";
+    });
+
+    // Close modal by clicking outside
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) modal.style.display = "none";
+    });
+  </script>
+
+</body>
+</html>
