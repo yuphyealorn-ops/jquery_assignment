@@ -1,152 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Create User Dialog Assignment</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-
-    h1 {
-      margin-bottom: 20px;
-    }
-
-    .user-list {
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      padding: 15px;
-      border-radius: 8px;
-    }
-
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    li {
-      padding: 6px 0;
-      border-bottom: 1px solid #eee;
-    }
-
-    button {
-      padding: 10px 15px;
-      border: none;
-      background: #007bff;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #0056b3;
-    }
-
-    /* Modal styling */
-    .modal {
-      display: none; 
-      position: fixed;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background: white;
-      padding: 20px;
-      width: 300px;
-      border-radius: 8px;
-    }
-
-    .modal input {
-      width: 100%;
-      padding: 8px;
-      margin: 8px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <title>User List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body { background:#f3f7f8; }
+        .error-text { color:#dc3545; font-size:.875rem; }
+        .is-invalid { border-color:#dc3545 !important; }
+    </style>
 </head>
 <body>
+    <div class="container py-4">
+        <h2 class="mb-3">User List</h2>
 
-  <h1>Create User Dialog Assignment</h1>
+        <div class="table-responsive mb-3">
+            <table class="table table-borderless">
+                <thead class="border-bottom">
+                    <tr>
+                        <th style="width: 25%;">Username</th>
+                        <th style="width: 35%;">Fullname</th>
+                        <th style="width: 40%;">Email</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTbody"><!-- starts empty --></tbody>
+            </table>
+        </div>
 
-  <!-- User List -->
-  <div class="user-list">
-    <h3>Existing Users</h3>
-    <ul id="userList">
-      <li><strong>admin</strong> — Admin User — admin@example.com</li>
-    </ul>
-  </div>
-
-  <button id="openModalBtn">Add New User</button>
-
-  <!-- Modal -->
-  <div id="userModal" class="modal">
-    <div class="modal-content">
-      <h3>New User</h3>
-
-      <input type="text" id="username" placeholder="Username" />
-      <input type="text" id="fullname" placeholder="Full name" />
-      <input type="email" id="email" placeholder="Email" />
-
-      <button id="submitUserBtn">Submit</button>
-      <button id="closeModalBtn" style="background:#888; margin-top:8px;">Cancel</button>
+        <button id="openNewUser" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newUserModal">
+            New User
+        </button>
     </div>
-  </div>
 
-  <script>
-    const modal = document.getElementById("userModal");
-    const openModalBtn = document.getElementById("openModalBtn");
-    const closeModalBtn = document.getElementById("closeModalBtn");
-    const submitUserBtn = document.getElementById("submitUserBtn");
-    const userList = document.getElementById("userList");
+    <!-- Modal -->
+    <div class="modal fade" id="newUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="newUserForm" novalidate>
+                    <div class="modal-header">
+                        <h5 class="modal-title">New User</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nuUsername" class="form-label">Username</label>
+                            <input type="text" id="nuUsername" class="form-control" />
+                            <div class="error-text d-none" data-for="nuUsername">This field is required</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nuFullname" class="form-label">Fullname</label>
+                            <input type="text" id="nuFullname" class="form-control" />
+                            <div class="error-text d-none" data-for="nuFullname">This field is required</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nuEmail" class="form-label">Email</label>
+                            <input type="email" id="nuEmail" class="form-control" />
+                            <div class="error-text d-none" data-for="nuEmail">Please enter a valid email</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Add User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-    // OPEN MODAL
-    openModalBtn.addEventListener("click", () => {
-      modal.style.display = "flex";
-    });
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(function () {
+            const $tbody = $("#usersTbody");
+            const modalEl = document.getElementById('newUserModal');
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
-    // CLOSE MODAL
-    closeModalBtn.addEventListener("click", () => {
-      modal.style.display = "none";
-    });
+            function showError($input, key) {
+                $input.addClass("is-invalid");
+                $('[data-for="' + key + '"]').removeClass("d-none");
+            }
+            function hideError($input, key) {
+                $input.removeClass("is-invalid");
+                $('[data-for="' + key + '"]').addClass("d-none");
+            }
+            const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
-    // SUBMIT NEW USER
-    submitUserBtn.addEventListener("click", () => {
-      const username = document.getElementById("username");
-      const fullname = document.getElementById("fullname");
-      const email = document.getElementById("email");
+            $("#newUserForm").on("submit", function (e) {
+                e.preventDefault();
 
-      if (!username.value || !fullname.value || !email.value) {
-        alert("Please fill out all fields!");
-        return;
-      }
+                const $u = $("#nuUsername"), $f = $("#nuFullname"), $e = $("#nuEmail");
+                const username = $u.val().trim();
+                const fullname = $f.val().trim();
+                const email = $e.val().trim();
 
-      // Add new user to list
-      const newUser = document.createElement("li");
-      newUser.innerHTML = `<strong>${username.value}</strong> — ${fullname.value} — ${email.value}`;
-      userList.appendChild(newUser);
+                let ok = true;
+                if (!username) { showError($u, "nuUsername"); ok = false; } else { hideError($u, "nuUsername"); }
+                if (!fullname) { showError($f, "nuFullname"); ok = false; } else { hideError($f, "nuFullname"); }
+                if (!isEmail(email)) { showError($e, "nuEmail"); ok = false; } else { hideError($e, "nuEmail"); }
+                if (!ok) return;
 
-      // Clear form
-      username.value = "";
-      fullname.value = "";
-      email.value = "";
+                // Create user row
+                const esc = (t) => $('<div>').text(t).html();
+                $tbody.append(`
+                    <tr>
+                        <td>${esc(username)}</td>
+                        <td>${esc(fullname)}</td>
+                        <td>${esc(email)}</td>
+                    </tr>
+                `);
 
-      // Close modal
-      modal.style.display = "none";
-    });
+                // Clear form, close dialog
+                this.reset();
+                ["nuUsername","nuFullname","nuEmail"].forEach(id => hideError($("#"+id), id));
+                modal.hide();
+            });
 
-    // Close modal by clicking outside
-    window.addEventListener("click", (e) => {
-      if (e.target === modal) modal.style.display = "none";
-    });
-  </script>
-
+            // Clear on close
+            modalEl.addEventListener('hidden.bs.modal', () => {
+                $("#newUserForm")[0].reset();
+                ["nuUsername","nuFullname","nuEmail"].forEach(id => hideError($("#"+id), id));
+            });
+        });
+    </script>
 </body>
 </html>
